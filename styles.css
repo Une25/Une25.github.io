@@ -1,0 +1,150 @@
+#calendar {
+    margin: 20px auto;
+    max-width: 600px;
+    position: relative;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+th,
+td {
+    padding: 0;
+    text-align: left;
+    vertical-align: top;
+    position: relative;
+}
+
+th {
+    background-color: #cafd91;
+    color: white;
+    padding: 10px;
+}
+
+td {
+    background-color: #f8f9fa;
+    cursor: pointer;
+    height: 100px;
+    border: 1px solid #dee2e6;
+}
+
+td:hover {
+    background-color: #e2e6ea;
+}
+
+.has-time {
+    background-color: #f8f9fa;
+}
+
+.date-number {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.work-time {
+    font-size: 0.75em;
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background: white;
+    border-radius: 3px;
+    padding: 2px 5px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+.saturday {
+    color: blue;
+}
+
+.sunday,
+.holiday {
+    color: red;
+}
+
+.today {
+    background-color: #f8e58c;
+}
+
+#settings {
+    margin-top: 20px;
+}
+
+#total-salary-box {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f0f8ff;
+    display: inline-block;
+}
+
+.salary-display {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #007bff;
+}
+
+#calendar-wrapper {
+    width: 100%;
+    max-width: 900px;
+    /* 必要に応じて調整 */
+    margin: 0 auto;
+    /* 中央揃え */
+}
+
+#settings-wrapper {
+    width: 100%;
+    max-width: 900px;
+    /* カレンダーと同じ幅 */
+    margin: 0 auto;
+}
+
+#settings-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    /* ボックス間の隙間 */
+}
+
+#wage-settings,
+#overtime-settings {
+    flex: 1;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-sizing: border-box;
+}
+
+#wage-settings h3,
+#overtime-settings h3 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+#wage-settings input,
+#overtime-settings input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+#saveSettingsButton {
+    padding: 10px;
+    background-color: #007bff;
+    color: rgb(242, 188, 254);
+    border: none;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#saveSettingsButton:hover {
+    background-color: #0056b3;
+    color: white;
+}
