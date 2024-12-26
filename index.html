@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>給料計算カレンダー</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <style>
+        #calendar {
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #c3e5ff;
+            color: rgb(21, 23, 25);
+        }
+
+        td {
+            background-color: #f8f9fa;
+            cursor: pointer;
+            position: relative;
+            height: 100px;
+        }
+
+        td:hover {
+            background-color: #e2e6ea;
+        }
+
+        .has-time {
+            background-color: #f8f9fa;
+        }
+
+        .work-time {
+            font-size: 0.75em;
+            position: absolute;
+            bottom: 5px;
+            /* 下から5pxの位置 */
+            left: 50%;
+            /* 左から50% */
+            transform: translateX(-50%);
+            /* 横方向で自分の幅の半分だけ左に移動 */
+            background: rgb(255, 255, 255);
+            border-radius: 3px;
+            padding: 2px 5px;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 80%;
+        }
+
+        .work-time .time {
+            margin-left: 5px;
+        }
+
+
+        .saturday {
+            color: rgb(32, 32, 203);
+        }
+
+        .sunday,
+        .holiday {
+            color: rgb(211, 30, 30);
+        }
+
+        .today {
+            background-color: #f8e58c;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: center;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .calendar-header h2 {
+            margin: 0;
+        }
+
+        .calendar-header .prev-month,
+        .calendar-header .next-month {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .calendar-header .prev-month {
+            left: 0;
+        }
+
+        .calendar-header .next-month {
+            right: 0;
+        }
+
+        /* スタイル追加 */
+        .salary-display {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        #settings {
+            margin-top: 20px;
+        }
+
+        #total-salary-box {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class="text-center mt-5">給料計算カレンダー</h1>
+    <div class="container">
+        <div id="calendar" class="text-center mt-5"></div>
+    </div>
+
+    <div id="calendar-wrapper" style="width: 100%; max-width: 900px; margin: 0 auto;">
+        <!-- カレンダー -->
+        <div id="calendar">
+            <!-- JavaScriptでカレンダーを生成 -->
+        </div>
+
+        <!-- 時給設定と割増設定 -->
+        <div id="settings-wrapper" style="margin-top: 20px;  max-width: 900px; margin: 0 auto;">
+            <div id="settings-container" style="display: flex; gap: 20px;">
+                <!-- 左側 (時給設定) -->
+                <div id="wage-settings"
+                    style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9;">
+                    <h3>時給設定</h3>
+                    <div style="display: flex; justify-content: space-between; gap: 10px;">
+                        <div style="flex: 1;">
+                            <label for="baseWage">時給:</label>
+                            <input type="number" id="baseWage" placeholder="時給" style="width: 100%;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="overtimeWage">割増時給:</label>
+                            <input type="number" id="overtimeWage" placeholder="割増時給" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px;">
+                        <div style="flex: 1;">
+                            <label for="holidayWage">休日時給:</label>
+                            <input type="number" id="holidayWage" placeholder="休日時給" style="width: 100%;">
+                        </div>
+                        <div style="flex: 1;">
+                            <label for="holidayOvertimeWage">休日割増時給:</label>
+                            <input type="number" id="holidayOvertimeWage" placeholder="休日割増時給" style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右側 (割増時間と保存ボタン) -->
+                <div id="overtime-settings"
+                    style="flex: 1; padding: 10px; border: 1px solid #cccccc; border-radius: 5px; background-color: #f9f9f9;">
+                    <h3>割増時間設定</h3>
+                    <div style="margin-bottom: 10px;">
+                        <label for="overtimeStart">割増開始:</label>
+                        <input type="time" id="overtimeStart" style="width: 100%;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label for="overtimeEnd">割増終了:</label>
+                        <input type="time" id="overtimeEnd" style="width: 100%;">
+                    </div>
+                    <button id="saveSettingsButton"
+                        style="width: 100%; margin-top: 10px; color: #007bff; background-color:  #f9f9f9">設定を保存</button>
+                </div>
+            </div>
+
+
+            <!-- 月の合計給料表示 -->
+            <div id="monthly-salary-box"
+                style="text-align: center; margin-top: 20px;flex: 1; padding: 10px; border: 1px solid #cccccc; border-radius: 5px; background-color: #f9f9f9;">
+                <h3 style="font-size: 1.2em;">月の合計給料：</h3> <!-- 月の合計給料 -->
+                <span id="monthlySalaryDisplay" class="salary-display"
+                    style="font-size: 2em; font-weight: bold; color: #007bff; margin-bottom: 200px;">¥0</span>
+                <!-- 計算結果のフォントサイズを大きくして下に余白を追加 -->
+            </div>
+
+            <h5 style="text-align:right; font-size: 20px;">※交通費や、休憩を抜いた計算は行えません。</h5>
+
+
+
+        </div>
+
+        <!-- モーダル（勤務時間設定用） -->
+        <div id="timeModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="timeModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="timeModalLabel">勤務時間</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="timeForm">
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="startTimeInput">開始時間</label>
+                                    <input type="time" class="form-control" id="startTimeInput" required>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="endTimeInput">終了時間</label>
+                                    <input type="time" class="form-control" id="endTimeInput" required>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="deleteButton" class="btn btn-danger">削除</button>
+                        <button type="submit" form="timeForm" class="btn btn-primary">保存</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JavaScriptファイルを読み込み -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+        <script src="script.js"></script>
+</body>
+
+</html>
