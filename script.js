@@ -303,4 +303,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 最初のカレンダーを表示
     generateCalendar(year, month);
+
+
+    document.getElementById('clearMonthlyData').addEventListener('click', function () {
+        // 月ごとにローカルストレージのデータを削除
+        const savedTimes = loadSavedTimes();
+        const monthStart = new Date(y, m, 1); // 月の初日
+        const monthEnd = new Date(y, m + 1, 0); // 月の最終日
+    
+        // 月ごとのデータを削除
+        for (const date in savedTimes) {
+            const dateObj = new Date(date);
+            if (dateObj.getFullYear() === y && dateObj.getMonth() === m) {
+                delete savedTimes[date]; // この月のデータを削除
+            }
+        }
+    
+        // 更新されたデータを保存
+        localStorage.setItem('calendarTimes', JSON.stringify(savedTimes));
+    
+        // カレンダーを再生成して表示を更新
+        generateCalendar(y, m);
+    
+        alert('この月のデータが削除されました！');
+    });
+
+    
 });
